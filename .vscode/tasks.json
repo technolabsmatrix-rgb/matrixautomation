@@ -1,5 +1,20 @@
 {
   "version": "2.0.0",
+  "inputs": [
+    {
+      "id": "testSuiteFile",
+      "type": "pickString",
+      "description": "Select TestNG config to run",
+      "options": [
+        "config/testrun_config.xml",
+        "config/homepage.xml",
+        "config/navigation.xml",
+        "config/contact.xml",
+        "config/links.xml"
+      ],
+      "default": "config/testrun_config.xml"
+    }
+  ],
   "tasks": [
     {
       "label": "Open Repo Editor",
@@ -13,6 +28,18 @@
         "reveal": "always",
         "panel": "new"
       }
+    },
+    {
+      "label": "Run Matrix Automation Suite",
+      "type": "shell",
+      "command": "powershell -ExecutionPolicy Bypass -File \"${workspaceFolder}\\.vscode\\run-suite.ps1\" -ConfigFile \"${input:testSuiteFile}\"",
+      "group": "test",
+      "presentation": {
+        "reveal": "always",
+        "panel": "new",
+        "focus": true
+      },
+      "problemMatcher": []
     }
   ]
 }

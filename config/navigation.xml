@@ -1,0 +1,12 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="Navigation Test Suite" verbose="0" parallel="false">
+
+    <!-- Navigation BDD Tests -->
+    <test name="Navigation Tests" enabled="true">
+        <parameter name="scenario.file.loc" value="scenarios/navigation.feature" />
+        <classes>
+            <class name="com.qmetry.qaf.automation.step.client.text.BDDTestFactory2" />
+        </classes>
+    </test>
+
+</suite>
