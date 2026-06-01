@@ -5,6 +5,23 @@ description: Guide and scaffold QAF resource management — application.properti
 
 You are managing QAF resources for the Matrix automation project.
 
+## Sample Project Reference
+
+The canonical `application.properties` is inside the zip at:
+```
+.claude/resources/qaf-blank-project-maven-master.zip
+→ resources/application.properties
+```
+
+The sample uses this loading pattern — **use it as the default for new projects**:
+```properties
+env.resources=resources
+resources.load.subdirs=1
+```
+This tells QAF to load `resources/` as the root and automatically discover all `.properties` files in all subdirectories. Environment-specific files (e.g. `resources/env1/env.properties`) are picked up automatically because subdirs are walked. This is simpler than the semicolon-separated list and is the approach used by the official QAF blank project.
+
+The semicolon-separated form (`env.resources=resources/common;resources/locators;resources/${env.name}`) is valid when you need **explicit load order control** — later-listed dirs override earlier ones. For most projects, `resources.load.subdirs=1` is sufficient.
+
 ## What is QAF Resource Management?
 
 QAF uses a central `ConfigurationManager` that loads properties from files at startup. Resources include:
@@ -348,34 +365,53 @@ Useful when switching drivers within a test run — each driver picks up its own
 
 ## Standard `application.properties` Template
 
+> **Pattern A — simple (recommended, matches sample project):** Use `env.resources=resources` + `resources.load.subdirs=1`. QAF walks the whole `resources/` tree automatically. Env-specific files live in `resources/env1/`, `resources/env2/` etc.
+
 ```properties
-# ── Environment ──────────────────────────────────────────
+# ── Base URL ─────────────────────────────────────────────
+env.baseurl=https://www.example.com
+
+# ── Resource loading (sample project pattern) ─────────────
+env.resources=resources
+resources.load.subdirs=1
+
+# ── Step provider ─────────────────────────────────────────
+step.provider.pkg=com.matrix.steps
+
+# ── Driver ────────────────────────────────────────────────
+remote.server=localhost
+remote.port=4444
+driver.name=chromeDriver
+
+# ── Waits & screenshots ───────────────────────────────────
+selenium.wait.timeout=30000
+selenium.success.screenshots=1
+
+# ── Listeners ─────────────────────────────────────────────
+qaf.listeners=com.matrix.listeners.MatrixListener
+
+# ── Retry / reporting ─────────────────────────────────────
+retry.count=0
+report.log.skip.success=0
+
+# ── Locale (uncomment if i18n needed) ────────────────────
+# env.load.locales=en
+# env.default.locale=en
+
+# ── Driver-specific resources ─────────────────────────────
+# android.resources=resources/android
+# ios.resources=resources/ios
+```
+
+> **Pattern B — explicit load order (use when override precedence matters):**
+
+```properties
 env.name=dev
 env.resources=resources/common;resources/locators;resources/${env.name}
 env.baseurl=https://dev.example.com
-
-# ── Driver ───────────────────────────────────────────────
 driver.name=chromeDriver
-system.webdriver.chrome.driver=resources/drivers/chromedriver.exe
-
-# ── Waits ────────────────────────────────────────────────
-selenium.wait.time=5
-element.wait.time=10
-
-# ── Locale ───────────────────────────────────────────────
-env.load.locales=en
-env.default.locale=en
-
-# ── Listeners ────────────────────────────────────────────
+selenium.wait.timeout=30000
 qaf.listeners=com.matrix.listeners.MatrixListener
-
-# ── Test data / credentials ──────────────────────────────
-admin.user.name=admin@example.com
-admin.user.pwd=Secret123
-
-# ── Driver-specific resources ────────────────────────────
-android.resources=resources/android
-ios.resources=resources/ios
 ```
 
 ---

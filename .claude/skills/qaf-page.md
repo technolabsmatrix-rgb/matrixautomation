@@ -5,6 +5,28 @@ description: Scaffold a new QAF Page Object class with locators wired to a prope
 
 You are scaffolding a QAF Page Object for the Matrix automation project.
 
+## Sample Project Reference
+
+The canonical locator file is inside the zip at:
+```
+.claude/resources/qaf-blank-project-maven-master.zip
+→ resources/search.properties
+```
+
+Its format is the ground truth for how locator entries should look:
+```properties
+input.search={"locator":"name=q","desc":"Search Input Box"}
+button.search={"locator":"name=btnG","desc":"Search Button"}
+reject.all={"locator":"id=W0wltc","desc":"Reject All Button"}
+```
+
+Key points:
+- File lives directly under `resources/` (or `resources/locators/` for organised projects) — loaded automatically when `resources.load.subdirs=1`
+- Key format: `pagename.elementname` — e.g. `search.inputBox`, `contact.submitBtn`
+- Value is a JSON object with at minimum `"locator"` and `"desc"`
+- `"locator"` uses `strategy=value` format: `"name=q"`, `"id=submitBtn"`, `"css=.btn-primary"`, `"xpath=//button[@type='submit']"`
+- Note: the sample file uses escaped quotes (`\"`) because it sits in a Java resources context — when writing directly, plain quotes are fine
+
 ## Project Conventions
 
 - Page classes: `src/test/java/com/matrix/pages/`

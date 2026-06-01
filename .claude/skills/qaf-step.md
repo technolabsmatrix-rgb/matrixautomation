@@ -5,6 +5,56 @@ description: Generate a new QAF step definition and wire it to a page object met
 
 You are generating QAF (QMetry Automation Framework) step definitions for the Matrix automation project.
 
+## Sample Project Reference
+
+The canonical step class is inside the zip at:
+```
+.claude/resources/qaf-blank-project-maven-master.zip
+→ src/test/java/com/qmetry/qaf/example/steps/StepsLibrary.java
+```
+
+Key patterns demonstrated in that file:
+- Step methods are **`static`** (not instance methods)
+- `import static com.qmetry.qaf.automation.step.CommonStep.*` gives access to built-in steps (`get`, `sendKeys`, `submit`, `verifyLinkWithPartialTextPresent`, etc.)
+- `QAFExtendedWebElement` is constructed directly from a locator key when a `@FindBy` page object is not needed
+- Helper methods (`private static`) can be extracted without `@QAFTestStep` — only public steps that BDD should see need the annotation
+
+```java
+// From StepsLibrary.java in the sample project
+import static com.qmetry.qaf.automation.step.CommonStep.*;
+import com.qmetry.qaf.automation.step.QAFTestStep;
+import com.qmetry.qaf.automation.ui.webdriver.*;
+
+public class StepsLibrary {
+
+    @QAFTestStep(description = "navigate to search page")
+    public static void navigateToSearchPage() {
+        get("/");                          // CommonStep.get() — navigates relative to env.baseurl
+        rejectAllCookies();               // private helper — no annotation
+    }
+
+    @QAFTestStep(description = "search for {0}")
+    public static void searchFor(String searchTerm) {
+        sendKeys(searchTerm, "input.search");   // locator key from search.properties
+        submit("input.search");
+    }
+
+    private static void rejectAllCookies() {
+        QAFWebElement btn = new QAFExtendedWebElement("reject.all");
+        if (btn.isPresent()) {
+            btn.click();
+        }
+    }
+}
+```
+
+The locator file for the above (`resources/search.properties`):
+```properties
+input.search={"locator":"name=q","desc":"Search Input Box"}
+button.search={"locator":"name=btnG","desc":"Search Button"}
+reject.all={"locator":"id=W0wltc","desc":"Reject All Button"}
+```
+
 ## Rules
 
 1. Step class lives in `src/test/java/com/matrix/steps/`

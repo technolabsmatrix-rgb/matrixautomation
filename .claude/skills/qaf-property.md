@@ -5,6 +5,18 @@ description: Reference and scaffold QAF application properties — all built-in 
 
 You are managing QAF application properties for the Matrix automation project.
 
+## Sample Project Reference
+
+Canonical config files are inside the zip at:
+```
+.claude/resources/qaf-blank-project-maven-master.zip
+→ resources/application.properties
+→ resources/env1/env.properties
+→ resources/env2/env.properties
+```
+
+The sample uses `env.resources=resources` + `resources.load.subdirs=1` — QAF auto-discovers all `.properties` files under the `resources/` tree. This is the preferred pattern for new projects (see `/qaf-resource` for details).
+
 ## What are QAF Properties?
 
 QAF uses a central `ConfigurationManager` backed by the `ApplicationProperties` enum. Every framework behaviour — driver, waits, screenshots, listeners, reporting, locale, encryption — is controlled by a named property key. Properties can be set in files, TestNG XML, or JVM system properties.
@@ -401,55 +413,57 @@ Steps:
 
 ## Standard `application.properties` Full Template
 
+> Follows the sample project pattern (`env.resources=resources` + `resources.load.subdirs=1`). The surefire plugin in `pom.xml` injects `outputDir`, `selenium.screenshots.dir`, etc. at runtime — those do not need to be in this file.
+
 ```properties
-# ── Environment ──────────────────────────────────────────────────
-env.name=dev
-env.baseurl=https://dev.example.com
-env.resources=resources/common;resources/locators;resources/${env.name}
+# ── Base URL ─────────────────────────────────────────────────────
+env.baseurl=https://www.example.com
 
-# ── Driver ───────────────────────────────────────────────────────
+# ── Resource loading (sample project pattern) ─────────────────────
+env.resources=resources
+resources.load.subdirs=1
+
+# ── Step provider ─────────────────────────────────────────────────
+step.provider.pkg=com.matrix.steps
+
+# ── Driver ────────────────────────────────────────────────────────
+remote.server=localhost
+remote.port=4444
 driver.name=chromeDriver
-system.webdriver.chrome.driver=resources/drivers/chromedriver.exe
-https.accept.all.cert=false
 
-# ── Waits ────────────────────────────────────────────────────────
+# ── Waits ─────────────────────────────────────────────────────────
 selenium.wait.timeout=30000
 commands.execution.interval=0
 
-# ── Screenshots ──────────────────────────────────────────────────
-selenium.success.screenshots=0
-selenium.failure.screenshots=1
-selenium.screenshots.dir=test-results/screenshots
+# ── Screenshots ───────────────────────────────────────────────────
+selenium.success.screenshots=1
 
-# ── Reporting ────────────────────────────────────────────────────
+# ── Reporting ─────────────────────────────────────────────────────
 report.log.level=Info
-report.log.skip.success=false
-test.results.dir=test-results
+report.log.skip.success=0
 tc.identifier.key=TestID
 
-# ── Test Execution ───────────────────────────────────────────────
-scenario.file.loc=scenarios
-step.provider.pkg=com.matrix.steps
+# ── Test Execution ────────────────────────────────────────────────
 retry.count=0
 global.datadriven.parallel=false
 
-# ── Locale ───────────────────────────────────────────────────────
-env.load.locales=en
-env.default.locale=en
-
-# ── Listeners ────────────────────────────────────────────────────
+# ── Listeners ─────────────────────────────────────────────────────
 qaf.listeners=com.matrix.listeners.MatrixListener
 element.default.listener=true
 
-# ── Security ─────────────────────────────────────────────────────
+# ── Locale (uncomment if i18n needed) ─────────────────────────────
+# env.load.locales=en
+# env.default.locale=en
+
+# ── Security ──────────────────────────────────────────────────────
 # encrypted.admin.user.pwd=<base64value>
 # password.decryptor.impl=com.matrix.security.AESDecryptor
 
-# ── Jira (optional) ──────────────────────────────────────────────
+# ── Jira (optional) ───────────────────────────────────────────────
 # jira.url=https://yourcompany.atlassian.net/browse
 # metadata.formatter.storyKey=<a href="${jira.url}/{0}">{0}</a>
 
-# ── Driver-specific resources ────────────────────────────────────
+# ── Driver-specific resources ─────────────────────────────────────
 # android.resources=resources/android
 # ios.resources=resources/ios
 ```
