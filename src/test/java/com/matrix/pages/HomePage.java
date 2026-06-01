@@ -1,14 +1,17 @@
 package com.matrix.pages;
 
+import com.qmetry.qaf.automation.core.ConfigurationManager;
 import com.qmetry.qaf.automation.ui.WebDriverBaseTestPage;
 import com.qmetry.qaf.automation.ui.WebDriverTestBase;
 import com.qmetry.qaf.automation.ui.annotations.FindBy;
+import com.qmetry.qaf.automation.ui.annotations.PageIdentifier;
 import com.qmetry.qaf.automation.ui.api.PageLocator;
 import com.qmetry.qaf.automation.ui.api.WebDriverTestPage;
 import com.qmetry.qaf.automation.ui.webdriver.QAFWebElement;
 
 public class HomePage extends WebDriverBaseTestPage<WebDriverTestPage> {
 
+    @PageIdentifier
     @FindBy(locator = "home.logo.loc")
     private QAFWebElement logo;
 
@@ -32,7 +35,12 @@ public class HomePage extends WebDriverBaseTestPage<WebDriverTestPage> {
 
     @Override
     protected void openPage(PageLocator locator, Object... args) {
-        new WebDriverTestBase().getDriver().get(locator.getLocator());
+        new WebDriverTestBase().getDriver().get(ConfigurationManager.getBundle().getString("env.baseurl"));
+    }
+
+    @Override
+    public boolean isPageActive(PageLocator locator, Object... args) {
+        return logo.isPresent();
     }
 
     public boolean isLogoDisplayed() {

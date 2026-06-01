@@ -81,9 +81,9 @@ public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
 
     public void clickSubmit() {
         submitButton.waitForPresent();
-        ((JavascriptExecutor) new WebDriverTestBase().getDriver())
-                .executeScript("arguments[0].scrollIntoView(true);", submitButton);
-        submitButton.click();
+        JavascriptExecutor js = (JavascriptExecutor) new WebDriverTestBase().getDriver();
+        js.executeScript("arguments[0].scrollIntoView({block:'center'});", submitButton);
+        js.executeScript("arguments[0].click();", submitButton);
     }
 
     public boolean isSuccessMessageDisplayed() {

@@ -30,6 +30,15 @@ public class NavigationPage extends WebDriverBaseTestPage<WebDriverTestPage> {
     @FindBy(locator = "nav.hamburger.loc")
     private QAFWebElement hamburgerMenu;
 
+    @FindBy(locator = "nav.section.about.loc")
+    private QAFWebElement aboutSectionHeading;
+
+    @FindBy(locator = "nav.section.services.loc")
+    private QAFWebElement servicesSectionHeading;
+
+    @FindBy(locator = "nav.section.contact.loc")
+    private QAFWebElement contactSectionHeading;
+
     @Override
     protected void openPage(PageLocator locator, Object... args) {
         new WebDriverTestBase().getDriver().get(locator.getLocator());
@@ -113,5 +122,17 @@ public class NavigationPage extends WebDriverBaseTestPage<WebDriverTestPage> {
 
     public QAFWebElement getHamburgerMenu() {
         return hamburgerMenu;
+    }
+
+    public QAFWebElement getAboutSectionHeading() {
+        return aboutSectionHeading;
+    }
+
+    public QAFWebElement getServicesSectionHeading() {
+        return servicesSectionHeading;
+    }
+
+    public QAFWebElement getContactSectionHeading() {
+        return contactSectionHeading;
     }
 }

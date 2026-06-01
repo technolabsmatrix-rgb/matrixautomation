@@ -3,6 +3,10 @@ Feature: Navigation Menu Verification
   I want all navigation menu items to be present and functional
   So that I can browse through all sections of the website
 
+  Background:
+    Given browser is launched and maximized
+    And user navigates to Matrix Technolabs homepage
+
   @Navigation @Smoke
   Scenario: Verify navigation menu is displayed on homepage
     Given user navigates to Matrix Technolabs homepage

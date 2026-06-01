@@ -11,7 +11,7 @@ public class HomePageSteps extends WebDriverTestBase {
 
     @QAFTestStep(description = "user navigates to Matrix Technolabs homepage")
     public void navigateToHomePage() {
-        getDriver().get("https://matrixtechnolabs.in/");
+        homePage.launchPage(null);
     }
 
     @QAFTestStep(description = "page title should contain {0}")

@@ -1,24 +1,6 @@
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="Matrix Technolabs Test Suite" verbose="0" parallel="false">
 
-    <!-- BDD Smoke Tests -->
-    <test name="Smoke Tests - BDD" enabled="true">
-        <parameter name="scenario.file.loc" value="scenarios" />
-        <parameter name="groups" value="Smoke" />
-        <classes>
-            <class name="com.qmetry.qaf.automation.step.client.text.BDDTestFactory2" />
-        </classes>
-    </test>
-
-    <!-- BDD Regression Tests -->
-    <test name="Regression Tests - BDD" enabled="true">
-        <parameter name="scenario.file.loc" value="scenarios" />
-        <parameter name="groups" value="Regression" />
-        <classes>
-            <class name="com.qmetry.qaf.automation.step.client.text.BDDTestFactory2" />
-        </classes>
-    </test>
-
     <!-- Homepage BDD Tests -->
     <test name="Homepage Tests" enabled="true">
         <parameter name="scenario.file.loc" value="scenarios/homepage.feature" />

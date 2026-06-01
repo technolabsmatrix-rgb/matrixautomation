@@ -3,6 +3,10 @@ Feature: Homepage Content Verification
   I want key content elements to be present on the homepage
   So that I can trust the website is fully loaded and functional
 
+  Background:
+    Given browser is launched and maximized
+    And user navigates to Matrix Technolabs homepage
+
   @Homepage @Smoke
   Scenario: Verify homepage title contains Matrix Technolabs
     Given user navigates to Matrix Technolabs homepage

@@ -3,6 +3,10 @@ Feature: Links and Buttons Verification
   I want all important links and CTA buttons to be functional
   So that I can navigate and interact with the website properly
 
+  Background:
+    Given browser is launched and maximized
+    And user navigates to Matrix Technolabs homepage
+
   @Links @Smoke
   Scenario: Verify hero CTA button is present and clickable
     Given user navigates to Matrix Technolabs homepage
