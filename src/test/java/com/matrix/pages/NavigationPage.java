@@ -3,34 +3,36 @@ package com.matrix.pages;
 import com.qmetry.qaf.automation.ui.WebDriverBaseTestPage;
 import com.qmetry.qaf.automation.ui.WebDriverTestBase;
 import com.qmetry.qaf.automation.ui.annotations.FindBy;
+import com.qmetry.qaf.automation.ui.api.PageLocator;
+import com.qmetry.qaf.automation.ui.api.WebDriverTestPage;
 import com.qmetry.qaf.automation.ui.webdriver.QAFWebElement;
 
-public class NavigationPage extends WebDriverBaseTestPage<NavigationPage> {
+public class NavigationPage extends WebDriverBaseTestPage<WebDriverTestPage> {
 
-    @FindBy(locator = "nav.menu")
+    @FindBy(locator = "nav.menu.loc")
     private QAFWebElement navMenu;
 
-    @FindBy(locator = "nav.menu.home")
+    @FindBy(locator = "nav.menu.home.loc")
     private QAFWebElement homeLink;
 
-    @FindBy(locator = "nav.menu.about")
+    @FindBy(locator = "nav.menu.about.loc")
     private QAFWebElement aboutLink;
 
-    @FindBy(locator = "nav.menu.services")
+    @FindBy(locator = "nav.menu.services.loc")
     private QAFWebElement servicesLink;
 
-    @FindBy(locator = "nav.menu.portfolio")
+    @FindBy(locator = "nav.menu.portfolio.loc")
     private QAFWebElement portfolioLink;
 
-    @FindBy(locator = "nav.menu.contact")
+    @FindBy(locator = "nav.menu.contact.loc")
     private QAFWebElement contactLink;
 
-    @FindBy(locator = "nav.hamburger")
+    @FindBy(locator = "nav.hamburger.loc")
     private QAFWebElement hamburgerMenu;
 
     @Override
-    protected void openPage(String pageUrl) {
-        new WebDriverTestBase().getDriver().get(pageUrl);
+    protected void openPage(PageLocator locator, Object... args) {
+        new WebDriverTestBase().getDriver().get(locator.getLocator());
     }
 
     public boolean isNavMenuDisplayed() {

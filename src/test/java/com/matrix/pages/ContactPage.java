@@ -3,40 +3,42 @@ package com.matrix.pages;
 import com.qmetry.qaf.automation.ui.WebDriverBaseTestPage;
 import com.qmetry.qaf.automation.ui.WebDriverTestBase;
 import com.qmetry.qaf.automation.ui.annotations.FindBy;
+import com.qmetry.qaf.automation.ui.api.PageLocator;
+import com.qmetry.qaf.automation.ui.api.WebDriverTestPage;
 import com.qmetry.qaf.automation.ui.webdriver.QAFWebElement;
 
-public class ContactPage extends WebDriverBaseTestPage<ContactPage> {
+public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
 
-    @FindBy(locator = "contact.form")
+    @FindBy(locator = "contact.form.loc")
     private QAFWebElement contactForm;
 
-    @FindBy(locator = "contact.name.field")
+    @FindBy(locator = "contact.name.field.loc")
     private QAFWebElement nameField;
 
-    @FindBy(locator = "contact.email.field")
+    @FindBy(locator = "contact.email.field.loc")
     private QAFWebElement emailField;
 
-    @FindBy(locator = "contact.phone.field")
+    @FindBy(locator = "contact.phone.field.loc")
     private QAFWebElement phoneField;
 
-    @FindBy(locator = "contact.message.field")
+    @FindBy(locator = "contact.message.field.loc")
     private QAFWebElement messageField;
 
-    @FindBy(locator = "contact.subject.field")
+    @FindBy(locator = "contact.subject.field.loc")
     private QAFWebElement subjectField;
 
-    @FindBy(locator = "contact.submit.button")
+    @FindBy(locator = "contact.submit.button.loc")
     private QAFWebElement submitButton;
 
-    @FindBy(locator = "contact.success.message")
+    @FindBy(locator = "contact.success.message.loc")
     private QAFWebElement successMessage;
 
-    @FindBy(locator = "contact.error.message")
+    @FindBy(locator = "contact.error.message.loc")
     private QAFWebElement errorMessage;
 
     @Override
-    protected void openPage(String pageUrl) {
-        new WebDriverTestBase().getDriver().get(pageUrl);
+    protected void openPage(PageLocator locator, Object... args) {
+        new WebDriverTestBase().getDriver().get(locator.getLocator());
     }
 
     public boolean isContactFormDisplayed() {
