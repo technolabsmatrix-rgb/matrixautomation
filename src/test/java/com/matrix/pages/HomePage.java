@@ -1,6 +1,7 @@
 package com.matrix.pages;
 
 import com.qmetry.qaf.automation.ui.WebDriverBaseTestPage;
+import com.qmetry.qaf.automation.ui.WebDriverTestBase;
 import com.qmetry.qaf.automation.ui.annotations.FindBy;
 import com.qmetry.qaf.automation.ui.webdriver.QAFWebElement;
 
@@ -29,7 +30,7 @@ public class HomePage extends WebDriverBaseTestPage<HomePage> {
 
     @Override
     protected void openPage(String pageUrl) {
-        getDriver().get(pageUrl);
+        new WebDriverTestBase().getDriver().get(pageUrl);
     }
 
     public boolean isLogoDisplayed() {
@@ -65,6 +66,6 @@ public class HomePage extends WebDriverBaseTestPage<HomePage> {
     }
 
     public String getPageTitle() {
-        return getDriver().getTitle();
+        return new WebDriverTestBase().getDriver().getTitle();
     }
 }

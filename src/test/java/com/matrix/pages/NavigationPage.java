@@ -1,6 +1,7 @@
 package com.matrix.pages;
 
 import com.qmetry.qaf.automation.ui.WebDriverBaseTestPage;
+import com.qmetry.qaf.automation.ui.WebDriverTestBase;
 import com.qmetry.qaf.automation.ui.annotations.FindBy;
 import com.qmetry.qaf.automation.ui.webdriver.QAFWebElement;
 
@@ -29,7 +30,7 @@ public class NavigationPage extends WebDriverBaseTestPage<NavigationPage> {
 
     @Override
     protected void openPage(String pageUrl) {
-        getDriver().get(pageUrl);
+        new WebDriverTestBase().getDriver().get(pageUrl);
     }
 
     public boolean isNavMenuDisplayed() {
@@ -77,10 +78,10 @@ public class NavigationPage extends WebDriverBaseTestPage<NavigationPage> {
     }
 
     public String getCurrentUrl() {
-        return getDriver().getCurrentUrl();
+        return new WebDriverTestBase().getDriver().getCurrentUrl();
     }
 
     public String getPageTitle() {
-        return getDriver().getTitle();
+        return new WebDriverTestBase().getDriver().getTitle();
     }
 }

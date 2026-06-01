@@ -1,6 +1,7 @@
 package com.matrix.pages;
 
 import com.qmetry.qaf.automation.ui.WebDriverBaseTestPage;
+import com.qmetry.qaf.automation.ui.WebDriverTestBase;
 import com.qmetry.qaf.automation.ui.annotations.FindBy;
 import com.qmetry.qaf.automation.ui.webdriver.QAFWebElement;
 
@@ -35,7 +36,7 @@ public class ContactPage extends WebDriverBaseTestPage<ContactPage> {
 
     @Override
     protected void openPage(String pageUrl) {
-        getDriver().get(pageUrl);
+        new WebDriverTestBase().getDriver().get(pageUrl);
     }
 
     public boolean isContactFormDisplayed() {
