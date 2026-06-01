@@ -14,5 +14,6 @@
     ],
     "cucumberautocomplete.gherkinDefinitionPart": "(@QAFTestStep\\(description\\s*=\\s*)",
     "cucumberautocomplete.stepRegExSymbol": "\"",
-    "java.compile.nullAnalysis.mode": "automatic"
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

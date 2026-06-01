@@ -12,20 +12,23 @@ public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
     @FindBy(locator = "contact.form.loc")
     private QAFWebElement contactForm;
 
-    @FindBy(locator = "contact.name.field.loc")
-    private QAFWebElement nameField;
+    @FindBy(locator = "contact.firstname.field.loc")
+    private QAFWebElement firstNameField;
+
+    @FindBy(locator = "contact.lastname.field.loc")
+    private QAFWebElement lastNameField;
 
     @FindBy(locator = "contact.email.field.loc")
     private QAFWebElement emailField;
 
-    @FindBy(locator = "contact.phone.field.loc")
-    private QAFWebElement phoneField;
+    @FindBy(locator = "contact.company.field.loc")
+    private QAFWebElement companyField;
+
+    @FindBy(locator = "contact.service.field.loc")
+    private QAFWebElement serviceField;
 
     @FindBy(locator = "contact.message.field.loc")
     private QAFWebElement messageField;
-
-    @FindBy(locator = "contact.subject.field.loc")
-    private QAFWebElement subjectField;
 
     @FindBy(locator = "contact.submit.button.loc")
     private QAFWebElement submitButton;
@@ -45,10 +48,16 @@ public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
         return contactForm.isDisplayed();
     }
 
-    public void enterName(String name) {
-        nameField.waitForPresent();
-        nameField.clear();
-        nameField.sendKeys(name);
+    public void enterFirstName(String firstName) {
+        firstNameField.waitForPresent();
+        firstNameField.clear();
+        firstNameField.sendKeys(firstName);
+    }
+
+    public void enterLastName(String lastName) {
+        lastNameField.waitForPresent();
+        lastNameField.clear();
+        lastNameField.sendKeys(lastName);
     }
 
     public void enterEmail(String email) {
@@ -57,24 +66,16 @@ public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
         emailField.sendKeys(email);
     }
 
-    public void enterPhone(String phone) {
-        phoneField.waitForPresent();
-        phoneField.clear();
-        phoneField.sendKeys(phone);
+    public void enterCompany(String company) {
+        companyField.waitForPresent();
+        companyField.clear();
+        companyField.sendKeys(company);
     }
 
     public void enterMessage(String message) {
         messageField.waitForPresent();
         messageField.clear();
         messageField.sendKeys(message);
-    }
-
-    public void enterSubject(String subject) {
-        if (subjectField.isPresent()) {
-            subjectField.waitForPresent();
-            subjectField.clear();
-            subjectField.sendKeys(subject);
-        }
     }
 
     public void clickSubmit() {
@@ -89,10 +90,10 @@ public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
         return errorMessage.isPresent();
     }
 
-    public void submitContactForm(String name, String email, String phone, String message) {
-        enterName(name);
+    public void submitContactForm(String firstName, String lastName, String email, String message) {
+        enterFirstName(firstName);
+        enterLastName(lastName);
         enterEmail(email);
-        enterPhone(phone);
         enterMessage(message);
         clickSubmit();
     }
@@ -101,24 +102,28 @@ public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
         return contactForm;
     }
 
-    public QAFWebElement getNameField() {
-        return nameField;
+    public QAFWebElement getFirstNameField() {
+        return firstNameField;
+    }
+
+    public QAFWebElement getLastNameField() {
+        return lastNameField;
     }
 
     public QAFWebElement getEmailField() {
         return emailField;
     }
 
-    public QAFWebElement getPhoneField() {
-        return phoneField;
+    public QAFWebElement getCompanyField() {
+        return companyField;
+    }
+
+    public QAFWebElement getServiceField() {
+        return serviceField;
     }
 
     public QAFWebElement getMessageField() {
         return messageField;
-    }
-
-    public QAFWebElement getSubjectField() {
-        return subjectField;
     }
 
     public QAFWebElement getSubmitButton() {

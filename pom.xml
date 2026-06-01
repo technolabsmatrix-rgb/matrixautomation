@@ -12,7 +12,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<testSuiteFile>config/homepage.xml</testSuiteFile>
+		<testSuiteFile>config/contact.xml</testSuiteFile>
 		<sourceVersion>1.8</sourceVersion>
 		<targetVersion>1.8</targetVersion>
 		<qaf.version>LATEST</qaf.version>
@@ -168,4 +168,7 @@
 		</pluginManagement>
 	</build>
 </project>
+
+
+
 
