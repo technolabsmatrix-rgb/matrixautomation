@@ -3,7 +3,6 @@ package com.matrix.steps;
 import com.matrix.pages.ContactPage;
 import com.qmetry.qaf.automation.step.QAFTestStep;
 import com.qmetry.qaf.automation.ui.WebDriverTestBase;
-import org.testng.Assert;
 
 public class ContactSteps extends WebDriverTestBase {
 
@@ -11,7 +10,7 @@ public class ContactSteps extends WebDriverTestBase {
 
     @QAFTestStep(description = "contact form should be displayed")
     public void contactFormShouldBeDisplayed() {
-        Assert.assertTrue(contactPage.isContactFormDisplayed(), "Contact form is not displayed");
+        contactPage.getContactForm().verifyPresent();
     }
 
     @QAFTestStep(description = "user fills contact form with name {0} email {1} phone {2} and message {3}")
@@ -34,14 +33,12 @@ public class ContactSteps extends WebDriverTestBase {
 
     @QAFTestStep(description = "success message should be displayed")
     public void successMessageShouldBeDisplayed() {
-        Assert.assertTrue(contactPage.isSuccessMessageDisplayed(),
-            "Success message was not displayed after form submission");
+        contactPage.getSuccessMessage().verifyPresent();
     }
 
     @QAFTestStep(description = "error or validation message should be displayed")
     public void errorMessageShouldBeDisplayed() {
-        Assert.assertTrue(contactPage.isErrorMessageDisplayed(),
-            "Error/validation message was not displayed");
+        contactPage.getErrorMessage().verifyPresent();
     }
 
     @QAFTestStep(description = "user clicks the hero CTA button")

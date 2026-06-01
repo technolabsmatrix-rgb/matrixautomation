@@ -86,4 +86,32 @@ public class NavigationPage extends WebDriverBaseTestPage<WebDriverTestPage> {
     public String getPageTitle() {
         return new WebDriverTestBase().getDriver().getTitle();
     }
+
+    public QAFWebElement getNavMenu() {
+        return navMenu;
+    }
+
+    public QAFWebElement getHomeLink() {
+        return homeLink;
+    }
+
+    public QAFWebElement getAboutLink() {
+        return aboutLink;
+    }
+
+    public QAFWebElement getServicesLink() {
+        return servicesLink;
+    }
+
+    public QAFWebElement getPortfolioLink() {
+        return portfolioLink;
+    }
+
+    public QAFWebElement getContactLink() {
+        return contactLink;
+    }
+
+    public QAFWebElement getHamburgerMenu() {
+        return hamburgerMenu;
+    }
 }

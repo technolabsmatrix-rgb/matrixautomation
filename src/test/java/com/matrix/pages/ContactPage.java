@@ -46,27 +46,32 @@ public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
     }
 
     public void enterName(String name) {
+        nameField.waitForPresent();
         nameField.clear();
         nameField.sendKeys(name);
     }
 
     public void enterEmail(String email) {
+        emailField.waitForPresent();
         emailField.clear();
         emailField.sendKeys(email);
     }
 
     public void enterPhone(String phone) {
+        phoneField.waitForPresent();
         phoneField.clear();
         phoneField.sendKeys(phone);
     }
 
     public void enterMessage(String message) {
+        messageField.waitForPresent();
         messageField.clear();
         messageField.sendKeys(message);
     }
 
     public void enterSubject(String subject) {
         if (subjectField.isPresent()) {
+            subjectField.waitForPresent();
             subjectField.clear();
             subjectField.sendKeys(subject);
         }
@@ -90,5 +95,41 @@ public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
         enterPhone(phone);
         enterMessage(message);
         clickSubmit();
+    }
+
+    public QAFWebElement getContactForm() {
+        return contactForm;
+    }
+
+    public QAFWebElement getNameField() {
+        return nameField;
+    }
+
+    public QAFWebElement getEmailField() {
+        return emailField;
+    }
+
+    public QAFWebElement getPhoneField() {
+        return phoneField;
+    }
+
+    public QAFWebElement getMessageField() {
+        return messageField;
+    }
+
+    public QAFWebElement getSubjectField() {
+        return subjectField;
+    }
+
+    public QAFWebElement getSubmitButton() {
+        return submitButton;
+    }
+
+    public QAFWebElement getSuccessMessage() {
+        return successMessage;
+    }
+
+    public QAFWebElement getErrorMessage() {
+        return errorMessage;
     }
 }

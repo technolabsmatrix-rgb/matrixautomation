@@ -70,4 +70,32 @@ public class HomePage extends WebDriverBaseTestPage<WebDriverTestPage> {
     public String getPageTitle() {
         return new WebDriverTestBase().getDriver().getTitle();
     }
+
+    public QAFWebElement getLogo() {
+        return logo;
+    }
+
+    public QAFWebElement getHeroHeading() {
+        return heroHeading;
+    }
+
+    public QAFWebElement getHeroCtaButton() {
+        return heroCtaButton;
+    }
+
+    public QAFWebElement getServicesSection() {
+        return servicesSection;
+    }
+
+    public QAFWebElement getAboutSection() {
+        return aboutSection;
+    }
+
+    public QAFWebElement getFooter() {
+        return footer;
+    }
+
+    public QAFWebElement getFooterCopyright() {
+        return footerCopyright;
+    }
 }

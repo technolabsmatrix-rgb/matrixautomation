@@ -11,27 +11,27 @@ public class NavigationSteps extends WebDriverTestBase {
 
     @QAFTestStep(description = "navigation menu should be displayed")
     public void navigationMenuShouldBeDisplayed() {
-        Assert.assertTrue(navigationPage.isNavMenuDisplayed(), "Navigation menu is not displayed");
+        navigationPage.getNavMenu().verifyPresent();
     }
 
     @QAFTestStep(description = "Home menu link should be present")
     public void homeMenuLinkShouldBePresent() {
-        Assert.assertTrue(navigationPage.isHomeLinkPresent(), "Home menu link is not present");
+        navigationPage.getHomeLink().verifyPresent();
     }
 
     @QAFTestStep(description = "About menu link should be present")
     public void aboutMenuLinkShouldBePresent() {
-        Assert.assertTrue(navigationPage.isAboutLinkPresent(), "About menu link is not present");
+        navigationPage.getAboutLink().verifyPresent();
     }
 
     @QAFTestStep(description = "Services menu link should be present")
     public void servicesMenuLinkShouldBePresent() {
-        Assert.assertTrue(navigationPage.isServicesLinkPresent(), "Services menu link is not present");
+        navigationPage.getServicesLink().verifyPresent();
     }
 
     @QAFTestStep(description = "Contact menu link should be present")
     public void contactMenuLinkShouldBePresent() {
-        Assert.assertTrue(navigationPage.isContactLinkPresent(), "Contact menu link is not present");
+        navigationPage.getContactLink().verifyPresent();
     }
 
     @QAFTestStep(description = "user clicks on About menu item")
@@ -52,6 +52,7 @@ public class NavigationSteps extends WebDriverTestBase {
     @QAFTestStep(description = "page should contain {0} in title or URL")
     public void pageShouldContainInTitleOrUrl(String text) {
         String title = navigationPage.getPageTitle().toLowerCase();
+        
         String url   = navigationPage.getCurrentUrl().toLowerCase();
         Assert.assertTrue(title.contains(text.toLowerCase()) || url.contains(text.toLowerCase()),
             "Expected page title or URL to contain '" + text + "'. Title: " + title + ", URL: " + url);

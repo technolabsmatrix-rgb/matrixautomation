@@ -23,36 +23,36 @@ public class HomePageSteps extends WebDriverTestBase {
 
     @QAFTestStep(description = "company logo should be displayed")
     public void logoShouldBeDisplayed() {
-        Assert.assertTrue(homePage.isLogoDisplayed(), "Company logo is not displayed");
+        homePage.getLogo().verifyPresent();
     }
 
     @QAFTestStep(description = "hero heading should be displayed")
     public void heroHeadingShouldBeDisplayed() {
-        Assert.assertTrue(homePage.isHeroHeadingDisplayed(), "Hero heading is not displayed");
+        homePage.getHeroHeading().verifyPresent();
     }
 
     @QAFTestStep(description = "services section should be present on the page")
     public void servicesSectionShouldBePresent() {
-        Assert.assertTrue(homePage.isServicesSectionPresent(), "Services section is not present");
+        homePage.getServicesSection().verifyPresent();
     }
 
     @QAFTestStep(description = "about section should be present on the page")
     public void aboutSectionShouldBePresent() {
-        Assert.assertTrue(homePage.isAboutSectionPresent(), "About section is not present");
+        homePage.getAboutSection().verifyPresent();
     }
 
     @QAFTestStep(description = "footer should be displayed at the bottom of the page")
     public void footerShouldBeDisplayed() {
-        Assert.assertTrue(homePage.isFooterDisplayed(), "Footer is not displayed");
+        homePage.getFooter().verifyPresent();
     }
 
     @QAFTestStep(description = "footer copyright text should be present")
     public void footerCopyrightShouldBePresent() {
-        Assert.assertTrue(homePage.isFooterCopyrightPresent(), "Footer copyright text is not present");
+        homePage.getFooterCopyright().verifyPresent();
     }
 
     @QAFTestStep(description = "hero CTA button should be present on the page")
     public void heroCtaButtonShouldBePresent() {
-        Assert.assertTrue(homePage.isHeroHeadingDisplayed(), "Hero CTA button is not present on the page");
+        homePage.getHeroCtaButton().verifyPresent();
     }
 }
