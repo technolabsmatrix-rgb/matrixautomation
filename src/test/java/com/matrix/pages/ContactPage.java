@@ -6,6 +6,7 @@ import com.qmetry.qaf.automation.ui.annotations.FindBy;
 import com.qmetry.qaf.automation.ui.api.PageLocator;
 import com.qmetry.qaf.automation.ui.api.WebDriverTestPage;
 import com.qmetry.qaf.automation.ui.webdriver.QAFWebElement;
+import org.openqa.selenium.JavascriptExecutor;
 
 public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
 
@@ -79,6 +80,9 @@ public class ContactPage extends WebDriverBaseTestPage<WebDriverTestPage> {
     }
 
     public void clickSubmit() {
+        submitButton.waitForPresent();
+        ((JavascriptExecutor) new WebDriverTestBase().getDriver())
+                .executeScript("arguments[0].scrollIntoView(true);", submitButton);
         submitButton.click();
     }
 

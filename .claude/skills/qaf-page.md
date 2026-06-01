@@ -19,6 +19,14 @@ You are scaffolding a QAF Page Object for the Matrix automation project.
 3. Always call `element.waitForPresent()` before `element.sendKeys()`
 4. Always use `element.verifyPresent()` for assertions — never `Assert.assertTrue`
 5. No direct CSS/XPath strings inside Java — all locators go in `.properties`
+6. On `ElementClickInterceptedException` — scroll element into view before clicking:
+   ```java
+   element.waitForPresent();
+   ((JavascriptExecutor) new WebDriverTestBase().getDriver())
+           .executeScript("arguments[0].scrollIntoView(true);", element);
+   element.click();
+   ```
+   Import required: `org.openqa.selenium.JavascriptExecutor`
 
 ### Rule 7 — Page Object Model (POM) Design
 

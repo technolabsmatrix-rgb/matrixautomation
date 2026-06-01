@@ -463,6 +463,7 @@ This master skill enforces rules from every QAF skill:
 - **Locators** — all in `resources/locators/*.properties`, never hardcoded in Java (`/qaf-page`, `/qaf-step`)
 - **POM** — every page extends `WebDriverBaseTestPage<Parent>`, has `openPage()` override (`/qaf-page`)
 - **Steps** — `@QAFTestStep`, `waitForPresent()` before `sendKeys()`, `verifyPresent()` not `Assert.assertTrue` (`/qaf-step`)
+- **Click errors** — on `ElementClickInterceptedException`, add `waitForPresent()` + `scrollIntoView(true)` via `JavascriptExecutor` before `.click()` (`/qaf-page` Rule 6)
 - **Listeners** — `QAFListenerAdapter` registered via `qaf.listeners` (`/qaf-listeners`)
 - **Resources** — `env.resources=resources/common;resources/locators;resources/${env.name}` pattern (`/qaf-resource`)
 - **Metadata** — BDD2 `@key:value` format, Feature-level + Scenario-level (`/qaf-metadata`)
