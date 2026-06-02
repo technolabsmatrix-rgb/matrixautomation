@@ -187,6 +187,53 @@ public class PropertyDataBean extends BaseDataBean {
 - Always use `element.verifyPresent()` for assertions — never `Assert.assertTrue`
 - Do NOT use `verifyVisible()` or pass arguments to `verifyPresent()`
 
+### Rule 10 — Getter for Every `@FindBy` Field (MANDATORY)
+
+Every `private QAFWebElement` field annotated with `@FindBy` **must** have a corresponding `public` getter that returns the `QAFWebElement` directly. The caller uses the getter to call `.getText()`, `.isPresent()`, `.verifyPresent()`, etc. — there is **no need** for separate text helper or state helper methods.
+
+```java
+@FindBy(locator = "componentname.elementname")
+private QAFWebElement elementName;
+
+// MANDATORY getter — caller uses element.getText(), element.isPresent(), etc.
+public QAFWebElement getElementName() {
+    return elementName;
+}
+```
+
+**Naming convention:** `get` + field name with first letter capitalised (standard Java bean naming).
+
+**Do NOT add text helpers or state helpers.** Methods like `getElementNameText()`, `isSomethingPresent()`, `isPopular()` are redundant — callers get the raw `QAFWebElement` from the getter and call the needed method directly:
+
+```java
+// WRONG — redundant helpers
+public String getServiceNameText() { return serviceName.getText().trim(); }
+public boolean isPopular() { return popularBadge.isPresent(); }
+
+// CORRECT — caller uses getter
+card.getServiceName().getText().trim();
+card.getPopularBadge().isPresent();
+```
+
+**IMPORTANT — Avoid name clashes with `QAFWebComponent` / `QAFExtendedWebElement`:**  
+Do NOT name a getter after a method already inherited from `QAFExtendedWebElement`:
+
+| Field name | Wrong getter | Correct getter |
+|---|---|---|
+| `location` | `getLocation()` ❌ | `getLocationElement()` ✓ |
+| `size` | `getSize()` ❌ | `getSizeElement()` ✓ |
+| `text` | `getText()` ❌ | `getTextElement()` ✓ |
+
+**Mandatory class section order:**
+1. `@FindBy` fields (all `private`)
+2. Constructor calling `super(locator)`
+3. `// ── Getters ──` — one `public QAFWebElement getXxx()` per field
+4. `// ── Actions ──` — `click`, `sendKeys`, `select` methods only
+5. `// ── Verification ──` — compound checks like `verifyCardDisplayed()`
+6. `equals()` override (only if matching/search support is needed)
+
+**No `// ── Text helpers ──` or `// ── State helpers ──` sections — ever.**
+
 ---
 
 ## Output Format
@@ -202,29 +249,54 @@ import com.qmetry.qaf.automation.ui.webdriver.QAFWebElement;
 
 public class <Name>Component extends QAFWebComponent {
 
-    @FindBy(locator = "componentname.elementname")
-    private QAFWebElement elementName;
+    @FindBy(locator = "componentname.fieldOne")
+    private QAFWebElement fieldOne;
+
+    @FindBy(locator = "componentname.fieldTwo")
+    private QAFWebElement fieldTwo;
 
     public <Name>Component(String locator) {
         super(locator);
     }
 
-    public String getElementText() {
-        return elementName.getText();
+    // ── Getters ───────────────────────────────────────────────────────────────
+
+    public QAFWebElement getFieldOne() {
+        return fieldOne;
     }
 
-    public void clickElement() {
-        elementName.waitForPresent();
-        elementName.click();
+    public QAFWebElement getFieldTwo() {
+        return fieldTwo;
+    }
+
+    // ── Actions ───────────────────────────────────────────────────────────────
+
+    public void clickFieldTwo() {
+        fieldTwo.waitForPresent();
+        fieldTwo.click();
+    }
+
+    // ── Verification ─────────────────────────────────────────────────────────
+
+    public void verifyComponentDisplayed() {
+        fieldOne.verifyPresent();
+        fieldTwo.verifyPresent();
     }
 }
 ```
 
-### Locator Properties (`resources/locators/<pagename>.properties`)
+### Locator File (`resources/locators/<pagename>.properties`)
 
+All locator keys **must** have a `.loc` suffix:
 ```properties
-pagename.componentname={'locator':'css=.component-root','desc':'Component root','component-class':'com.matrix.components.<Name>Component'}
-componentname.elementname={'locator':'css=.child','desc':'Child element inside component'}
+pagename.componentname.loc={'locator':'css=.component-root','desc':'Component root','component-class':'com.matrix.components.<Name>Component'}
+componentname.elementname.loc={'locator':'css=.child','desc':'Child element inside component'}
+```
+
+The same `.loc`-suffixed key is used in `@FindBy`:
+```java
+@FindBy(locator = "componentname.elementname.loc")
+private QAFWebElement elementName;
 ```
 
 ### Page Wiring (inside the page that contains the component)

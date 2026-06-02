@@ -5,33 +5,6 @@ description: Master skill — creates a new QAF project from scratch or converts
 
 You are the master QAF project scaffolding skill for the Matrix automation team.
 
-## Sample Project Reference
-
-The canonical working QAF blank project is stored as a zip at:
-```
-.claude/resources/qaf-blank-project-maven-master.zip
-```
-
-Extract it locally if you need to inspect it. **Always use this as the ground truth** for:
-- `pom.xml` structure (AspectJ plugin, exec-maven-plugin, `LATEST` versions, surefire with timestamp output dir)
-- `config/testrun_config.xml` structure (BDD + Java test blocks)
-- `resources/application.properties` base config (`env.resources=resources`, `resources.load.subdirs=1`)
-- `resources/search.properties` — canonical locator file format
-- `src/test/java/.../steps/StepsLibrary.java` — canonical step class with `static` methods and `import static CommonStep.*`
-- `src/test/java/.../test/SampleTest.java` — canonical Java test extending `WebDriverTestCase`
-
-When scaffolding a new project, copy and adapt the structure from this sample rather than inventing it from scratch. File paths inside the zip:
-| Purpose | Path inside zip |
-|---|---|
-| Maven build | `pom.xml` |
-| TestNG suite | `config/testrun_config.xml` |
-| App config | `resources/application.properties` |
-| Locators | `resources/search.properties` |
-| Steps | `src/test/java/com/qmetry/qaf/example/steps/StepsLibrary.java` |
-| Java test | `src/test/java/com/qmetry/qaf/example/test/SampleTest.java` |
-| Feature file | `scenarios/suite1.feature` |
-| Env override | `resources/env1/env.properties` |
-
 ## Trigger Phrases
 
 This skill activates when the user says any of:
@@ -142,22 +115,15 @@ test-results/
 
 #### `config/testng.xml`
 
-> **Derived from** `.claude/resources/qaf-blank-project-maven-master/config/testrun_config.xml`.
-> The sample includes both a BDD2 block (for feature files) and a Java Test block (for `WebDriverTestCase` subclasses). Include both unless the project uses only one style.
-
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="<ProjectName> Test Suite" verbose="0">
+<suite name="<ProjectName> Test Suite" verbose="0" parallel="false">
 
-  <test name="BDD Test" enabled="true">
+  <test name="<ProjectName>-BDD2">
+    <parameter name="env.name" value="dev"/>
     <classes>
       <class name="com.qmetry.qaf.automation.step.client.text.BDDTestFactory2"/>
-    </classes>
-  </test>
-
-  <test name="Java Test" enabled="true">
-    <classes>
-      <class name="com.matrix.<projectname>.tests.SampleTest"/>
     </classes>
   </test>
 
@@ -167,6 +133,7 @@ test-results/
 #### `config/testng-parallel.xml`
 
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="<ProjectName> Parallel Suite" verbose="0" parallel="tests" thread-count="2">
 
@@ -254,42 +221,26 @@ Empty placeholder.
 
 #### `resources/application.properties`
 
-> **Derived from** `.claude/resources/qaf-blank-project-maven-master/resources/application.properties`.
-> The sample uses `env.resources=resources` + `resources.load.subdirs=1` so QAF auto-discovers all `.properties` files in the `resources/` tree, including subdirectory overrides. This is simpler than the semicolon-list pattern and is the correct approach for new projects.
+Generated from environment answers:
 
 ```properties
-# ── Base URL ──────────────────────────────────────────────
-env.baseurl=<base_url_from_user>
+# ── Entry point ───────────────────────────────────────────
+env.name=<first_env_name>
+env.resources=resources/common;resources/locators;resources/${env.name}
 
-# ── Resource loading ──────────────────────────────────────
-# QAF walks all subdirs under resources/ automatically
-env.resources=resources
-resources.load.subdirs=1
-
-# ── Step provider ─────────────────────────────────────────
-step.provider.pkg=com.matrix.<projectname>
-
-# ── Driver ────────────────────────────────────────────────
-remote.server=localhost
-remote.port=4444
+# ── Driver ───────────────────────────────────────────────
 driver.name=chromeDriver
+system.webdriver.chrome.driver=resources/drivers/chromedriver.exe
+https.accept.all.cert=false
 
-# ── Waits & screenshots ───────────────────────────────────
-selenium.wait.timeout=30000
-selenium.success.screenshots=1
+# ── Locale ───────────────────────────────────────────────
+env.load.locales=<locales_semicolon_separated>
+env.default.locale=<default_locale>
 
-# ── Listeners ─────────────────────────────────────────────
+# ── Listeners ────────────────────────────────────────────
 qaf.listeners=com.matrix.<projectname>.listeners.MatrixListener
 
-# ── Retry / reporting ─────────────────────────────────────
-retry.count=0
-report.log.skip.success=0
-
-# ── Locale (uncomment if i18n is needed) ─────────────────
-# env.load.locales=<locales_semicolon_separated>
-# env.default.locale=<default_locale>
-
-# ── Filters (uncomment to activate) ──────────────────────
+# ── Filters (uncomment to activate) ─────────────────────
 # include={'groups':['smoke']}
 # exclude={'enabled':['false']}
 ```
@@ -320,153 +271,58 @@ Create the same file under each env folder if env-specific translations are need
 
 #### `resources/locators/home.properties` — starter locator file
 
+All locator keys must end with `.loc` suffix:
 ```properties
 # Home page locators
-home.pageHeader={'locator':'css=h1','desc':'Home page header'}
+home.pageHeader.loc={'locator':'css=h1','desc':'Home page header'}
 ```
 
 #### `pom.xml` — Maven project file
 
-> **Derived from** `.claude/resources/qaf-blank-project-maven-master/pom.xml` — the authoritative template.
-> Key points: Java 1.8, `LATEST` for QAF/Selenium/WebDriverManager, AspectJ plugin for QAF instrumentation, exec-maven-plugin for RepoEditor, surefire with timestamped output directory.
-
 ```xml
+<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.matrix</groupId>
   <artifactId><projectname></artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <properties>
+    <maven.compiler.source>11</maven.compiler.source>
+    <maven.compiler.target>11</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <testSuiteFile>config/testng.xml</testSuiteFile>
-    <sourceVersion>1.8</sourceVersion>
-    <targetVersion>1.8</targetVersion>
-    <qaf.version>LATEST</qaf.version>
-    <selenium.version>LATEST</selenium.version>
-    <webdrivermanager.version>LATEST</webdrivermanager.version>
-    <test.results.dir>test-results</test.results.dir>
-    <run.time>${maven.build.timestamp}</run.time>
-    <lib.dir>${project.basedir}/lib</lib.dir>
-    <resource.dir>${project.basedir}/resources</resource.dir>
-    <output.dir>${test.results.dir}/${run.time}</output.dir>
-    <maven.build.timestamp.format>dd_MMM_yyyy_hh_mm_aa</maven.build.timestamp.format>
+    <qaf.version>4.0.0-RC3</qaf.version>
+    <testng.version>7.4.0</testng.version>
   </properties>
 
-  <repositories>
-    <repository>
-      <id>jai</id>
-      <url>https://repository.jboss.org/nexus/content/repositories/thirdparty-releases</url>
-    </repository>
-  </repositories>
-
   <dependencies>
-    <dependency>
-      <groupId>org.seleniumhq.selenium</groupId>
-      <artifactId>selenium-java</artifactId>
-      <version>${selenium.version}</version>
-    </dependency>
     <dependency>
       <groupId>com.qmetry</groupId>
       <artifactId>qaf</artifactId>
       <version>${qaf.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.github.bonigarcia</groupId>
-      <artifactId>webdrivermanager</artifactId>
-      <version>${webdrivermanager.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.qmetry</groupId>
-      <artifactId>qaf-support</artifactId>
-      <version>${qaf.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.qmetry</groupId>
-          <artifactId>qaf</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.testng</groupId>
+      <artifactId>testng</artifactId>
+      <version>${testng.version}</version>
     </dependency>
   </dependencies>
 
   <build>
     <plugins>
-      <!-- QAF RepoEditor — locator repository management -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>exec-maven-plugin</artifactId>
-        <version>1.2.1</version>
-        <executions>
-          <execution>
-            <id>repo-editor</id>
-            <goals><goal>java</goal></goals>
-          </execution>
-        </executions>
-        <configuration>
-          <mainClass>com.qmetry.qaf.automation.tools.RepoEditor</mainClass>
-          <classpathScope>test</classpathScope>
-        </configuration>
-      </plugin>
-
-      <!-- Compiler — Java 1.8 -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <compilerVersion>${sourceVersion}</compilerVersion>
-          <source>${sourceVersion}</source>
-          <target>${targetVersion}</target>
-        </configuration>
-      </plugin>
-
-      <!-- AspectJ — required for QAF step instrumentation -->
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>aspectj-maven-plugin</artifactId>
-        <version>1.14.0</version>
-        <executions>
-          <execution>
-            <id>test-compile</id>
-            <goals><goal>test-compile</goal></goals>
-          </execution>
-        </executions>
-        <configuration>
-          <source>${sourceVersion}</source>
-          <target>${targetVersion}</target>
-          <showWeaveInfo>true</showWeaveInfo>
-          <complianceLevel>${sourceVersion}</complianceLevel>
-          <aspectLibraries>
-            <aspectLibrary>
-              <groupId>com.qmetry</groupId>
-              <artifactId>qaf</artifactId>
-            </aspectLibrary>
-          </aspectLibraries>
-        </configuration>
-      </plugin>
-
-      <!-- Surefire — timestamped output directories -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.9</version>
+        <version>3.0.0</version>
         <configuration>
           <suiteXmlFiles>
-            <suiteXmlFile>${testSuiteFile}</suiteXmlFile>
+            <suiteXmlFile>config/testng.xml</suiteXmlFile>
           </suiteXmlFiles>
-          <reportsDirectory>${test.results.dir}/${run.time}</reportsDirectory>
-          <systemPropertyVariables>
-            <log4j.configuration>file:///${resource.dir}/log4j.properties</log4j.configuration>
-            <outputDir>${output.dir}</outputDir>
-            <test.results.dir>${output.dir}/html</test.results.dir>
-            <json.report.root.dir>${test.results.dir}</json.report.root.dir>
-            <json.report.dir>${output.dir}/json</json.report.dir>
-            <selenium.screenshots.dir>${output.dir}/img</selenium.screenshots.dir>
-            <selenium.screenshots.relative.path>../img</selenium.screenshots.relative.path>
-          </systemPropertyVariables>
         </configuration>
       </plugin>
     </plugins>
@@ -477,13 +333,51 @@ home.pageHeader={'locator':'css=h1','desc':'Home page header'}
 #### `.gitignore`
 
 ```
-bin/
-test-results/
-*.class
-.DS_Store
+# ── Maven build output ────────────────────────────────────
 target/
-*.log
+*.class
+
+# ── Test output / reports ─────────────────────────────────
+test-output/
+test-results/
+bin/
+img/
+
+# ── WebDriver binaries ────────────────────────────────────
 resources/drivers/
+
+# ── Logs ─────────────────────────────────────────────────
+*.log
+logs/
+
+# ── Eclipse IDE ───────────────────────────────────────────
+.classpath
+.project
+.settings/
+*.launch
+
+# ── IntelliJ IDEA ─────────────────────────────────────────
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# ── VS Code ───────────────────────────────────────────────
+.vscode/
+
+# ── Claude Code internal files ────────────────────────────
+.claude/
+
+# ── OS artefacts ──────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ── Runtime dashboard snapshot (generated) ───────────────
+dashboard.htm
+
+# ── Sensitive / environment-specific ─────────────────────
+resources/production/env.properties
 ```
 
 ---
@@ -547,58 +441,22 @@ public class HomePage extends WebDriverBaseTestPage<WebDriverTestPage> {
 
 #### `src/test/java/com/matrix/<projectname>/steps/HomeSteps.java`
 
-> **Pattern from** `.claude/resources/qaf-blank-project-maven-master/src/.../steps/StepsLibrary.java`.
-> Use `static` methods and `import static CommonStep.*` to access built-in QAF step helpers. For page-backed steps, delegate to the page class.
-
 ```java
 package com.matrix.<projectname>.steps;
 
-import static com.qmetry.qaf.automation.step.CommonStep.*;
-
 import com.matrix.<projectname>.pages.HomePage;
 import com.qmetry.qaf.automation.step.QAFTestStep;
-import com.qmetry.qaf.automation.ui.webdriver.QAFExtendedWebElement;
-import com.qmetry.qaf.automation.ui.webdriver.QAFWebElement;
 
 public class HomeSteps {
 
     @QAFTestStep(description = "user navigates to home page")
-    public static void userNavigatesToHomePage() {
+    public void userNavigatesToHomePage() {
         new HomePage().launchPage(null);
     }
 
     @QAFTestStep(description = "home page header should be present")
-    public static void homePageHeaderShouldBePresent() {
+    public void homePageHeaderShouldBePresent() {
         new HomePage().verifyPageLoaded();
-    }
-
-    @QAFTestStep(description = "user is on {0}")
-    public static void userIsOnPage(String url) {
-        // CommonStep.get() navigates relative to env.baseurl
-        get(url);
-    }
-}
-```
-
-#### `src/test/java/com/matrix/<projectname>/tests/SampleTest.java`
-
-> **Pattern from** `.claude/resources/qaf-blank-project-maven-master/src/.../test/SampleTest.java`.
-> Java tests extend `WebDriverTestCase` and call step methods directly (static import style).
-
-```java
-package com.matrix.<projectname>.tests;
-
-import static com.qmetry.qaf.automation.step.CommonStep.*;
-import static com.matrix.<projectname>.steps.HomeSteps.*;
-import org.testng.annotations.Test;
-import com.qmetry.qaf.automation.ui.WebDriverTestCase;
-
-public class SampleTest extends WebDriverTestCase {
-
-    @Test
-    public void testHomePage() {
-        userNavigatesToHomePage();
-        homePageHeaderShouldBePresent();
     }
 }
 ```
@@ -644,7 +502,6 @@ This master skill enforces rules from every QAF skill:
 - **Locators** — all in `resources/locators/*.properties`, never hardcoded in Java (`/qaf-page`, `/qaf-step`)
 - **POM** — every page extends `WebDriverBaseTestPage<Parent>`, has `openPage()` override (`/qaf-page`)
 - **Steps** — `@QAFTestStep`, `waitForPresent()` before `sendKeys()`, `verifyPresent()` not `Assert.assertTrue` (`/qaf-step`)
-- **Click errors** — on `ElementClickInterceptedException`, add `waitForPresent()` + `scrollIntoView(true)` via `JavascriptExecutor` before `.click()` (`/qaf-page` Rule 6)
 - **Listeners** — `QAFListenerAdapter` registered via `qaf.listeners` (`/qaf-listeners`)
 - **Resources** — `env.resources=resources/common;resources/locators;resources/${env.name}` pattern (`/qaf-resource`)
 - **Metadata** — BDD2 `@key:value` format, Feature-level + Scenario-level (`/qaf-metadata`)

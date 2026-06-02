@@ -5,28 +5,6 @@ description: Scaffold a new QAF Page Object class with locators wired to a prope
 
 You are scaffolding a QAF Page Object for the Matrix automation project.
 
-## Sample Project Reference
-
-The canonical locator file is inside the zip at:
-```
-.claude/resources/qaf-blank-project-maven-master.zip
-→ resources/search.properties
-```
-
-Its format is the ground truth for how locator entries should look:
-```properties
-input.search={"locator":"name=q","desc":"Search Input Box"}
-button.search={"locator":"name=btnG","desc":"Search Button"}
-reject.all={"locator":"id=W0wltc","desc":"Reject All Button"}
-```
-
-Key points:
-- File lives directly under `resources/` (or `resources/locators/` for organised projects) — loaded automatically when `resources.load.subdirs=1`
-- Key format: `pagename.elementname` — e.g. `search.inputBox`, `contact.submitBtn`
-- Value is a JSON object with at minimum `"locator"` and `"desc"`
-- `"locator"` uses `strategy=value` format: `"name=q"`, `"id=submitBtn"`, `"css=.btn-primary"`, `"xpath=//button[@type='submit']"`
-- Note: the sample file uses escaped quotes (`\"`) because it sits in a Java resources context — when writing directly, plain quotes are fine
-
 ## Project Conventions
 
 - Page classes: `src/test/java/com/matrix/pages/`
@@ -41,17 +19,6 @@ Key points:
 3. Always call `element.waitForPresent()` before `element.sendKeys()`
 4. Always use `element.verifyPresent()` for assertions — never `Assert.assertTrue`
 5. No direct CSS/XPath strings inside Java — all locators go in `.properties`
-6. On `ElementClickInterceptedException` — scroll to center then JS-click (confirmed working pattern):
-   ```java
-   element.waitForPresent();
-   JavascriptExecutor js = (JavascriptExecutor) new WebDriverTestBase().getDriver();
-   js.executeScript("arguments[0].scrollIntoView({block:'center'});", element);
-   js.executeScript("arguments[0].click();", element);
-   ```
-   - Use `{block:'center'}` not `true` — centers element in viewport, avoids sticky header overlap
-   - Always JS-click after scrolling — never native `.click()`, it will still be intercepted
-   - Do NOT use `window.scrollTo(0, document.body.scrollHeight)` — unreliable on deep pages
-   - Import required: `org.openqa.selenium.JavascriptExecutor`
 
 ### Rule 7 — Page Object Model (POM) Design
 
@@ -242,9 +209,22 @@ public class MyCompanyTab extends TopNavTab { ... }
 | `-android uiautomator` | `-android uiautomator=text('OK')` (Android) |
 | `-ios predicate string` | `-ios predicate string=label == 'OK'` (iOS) |
 
+**Locator key naming — MANDATORY `.loc` suffix on every key:**
+
+Every locator key in the `.properties` file must end with `.loc`:
+```properties
+pagename.elementname.loc={"locator":"css=.selector", "desc":"Human label"}
+```
+
+The same `.loc`-suffixed key is used in `@FindBy`:
+```java
+@FindBy(locator = "pagename.elementname.loc")
+private QAFWebElement elementName;
+```
+
 **Standard format:**
 ```properties
-pagename.elementname={"locator":"css=.selector", "desc":"Human label"}
+pagename.elementname.loc={"locator":"css=.selector", "desc":"Human label"}
 ```
 
 **Full JSON format (all optional fields):**
@@ -342,11 +322,13 @@ sendKeys 'myusername' into 'login.username.txt'
 
 ### Rule 10 — Locator Repository File Extensions
 
-Locator files may use `.properties` or `.loc` extensions — both are loaded from `env.resources` dirs:
+Locator files **must** use the `.loc` extension (not `.properties`). This is the Matrix project standard:
 ```
-resources/locators/login.properties   ← standard
-resources/locators/login.loc          ← also valid
+resources/locators/login.loc      ← CORRECT
+resources/locators/login.properties  ← DO NOT USE
 ```
+
+All locator files live in `resources/locators/` and use `.loc` extension. QAF loads both `.properties` and `.loc` from `env.resources` dirs, but `.loc` is mandatory for this project.
 
 ### Rule 11 — Web Services Page Base Class
 
